@@ -38,7 +38,23 @@ RUN git clone --depth 1 --branch ${HERMES_REF} https://github.com/NousResearch/h
     cd /opt/hermes-agent/web && \
     npm install --silent && \
     npm run build && \
+    cd /opt/hermes-agent/ui-tui && \
+    npm install --silent --no-fund --no-audit --progress=false && \
+    npm run build && \
     rm -rf /opt/hermes-agent/web /opt/hermes-agent/.git /root/.npm
+
+# Why pre-build ui-tui (and why we don't delete it after):
+# - The dashboard's embedded Chat tab spawns `node ui-tui/dist/entry.js`
+#   on every WebSocket connect to /api/pty.
+# - hermes's _make_tui_argv runs `npm install` + `npm run build` via
+#   *synchronous* subprocess.run if dist/entry.js is missing or stale —
+#   that would block the dashboard's asyncio event loop for 30-60s on
+#   the first chat-open, freezing every other request.
+# - Pre-building at image time costs ~200-300 MB of node_modules but
+#   makes first-chat-open instant and surfaces any build failure here
+#   instead of at user request time.
+# - We keep ui-tui/ entirely (node_modules + dist + src) so hermes's
+#   freshness checks don't trigger a re-install at runtime.
 
 COPY requirements.txt /app/requirements.txt
 RUN uv pip install --system --no-cache -r /app/requirements.txt
