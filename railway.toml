@@ -5,7 +5,7 @@ dockerfilePath = "Dockerfile"
 [variables]
 SYNCTHING_DEVICE_ID = { description = "Device ID of the machine to sync with (from Syncthing UI → Actions → Show ID)", required = false }
 SYNCTHING_FOLDER_PATH = { description = "Path inside the container to sync with the remote device", default = "/data/syncthing/Sync", required = false }
-SYNCTHING_FOLDER_LABEL = { description = "Human-readable label for the synced folder (shown in Syncthing UI)", default = "Default Folder", required = false }
+SYNCTHING_FOLDER_LABEL = { description = "Human-readable label for the synced folder (shown in Syncthing UI)", default = "Gbrain Sync", required = false }
 
 [deploy]
 healthcheckPath = "/health"
