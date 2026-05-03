@@ -31,7 +31,7 @@ RUN mkdir -p /data/.hermes /data/syncthing /etc/supervisor/conf.d
 
 COPY server.py /app/server.py
 COPY templates/ /app/templates/
-COPY start.sh /app/start.sh
+COPY hermes_start.sh /app/hermes_start.sh
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
