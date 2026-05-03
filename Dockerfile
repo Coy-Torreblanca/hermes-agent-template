@@ -32,10 +32,11 @@ RUN mkdir -p /data/.hermes /data/syncthing /etc/supervisor/conf.d
 COPY server.py /app/server.py
 COPY templates/ /app/templates/
 COPY hermes_start.sh /app/hermes_start.sh
+COPY syncthing_config.sh /app/syncthing_config.sh
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/hermes_start.sh
+RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh
 
 ENV HOME=/data
 ENV HERMES_HOME=/data/.hermes
