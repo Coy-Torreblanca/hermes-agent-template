@@ -46,6 +46,7 @@ mcp_servers:
     env:
       DATABASE_URL: "${DATABASE_URL}"
       GBRAIN_HOME: "${GBRAIN_HOME}"
+      BRAIN_PATH: "${SYNCTHING_FOLDER_PATH:-/data/syncthing/Sync}"
     timeout: 60
     connect_timeout: 30
 MCPEOF
