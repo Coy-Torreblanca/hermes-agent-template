@@ -7,7 +7,7 @@ echo "[gbrain-sync] Running live sync..."
 echo "    Brain Path: $BRAIN_PATH"
 
 # Sync brain repo and embed stale documents
-gbrain sync --repo "$BRAIN_PATH"
-gbrain embed --stale
+bun run src/cli.ts sync --repo "$BRAIN_PATH"
+bun run src/cli.ts embed --stale
 
 echo "[gbrain-sync] Sync complete"

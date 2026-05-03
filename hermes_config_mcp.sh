@@ -12,16 +12,29 @@ if [ ! -f "$CONFIG_PATH" ]; then
     exit 0
 fi
 
-# Check if MCP section already exists
-if grep -q "mcp:" "$CONFIG_PATH"; then
-    echo "[hermes-config-mcp] MCP section already configured"
-    exit 0
+# Validate required env vars
+if [ -z "$DATABASE_URL" ]; then
+    echo "[hermes-config-mcp] WARNING: DATABASE_URL not set — GBrain MCP may fail to connect to DB"
+fi
+if [ -z "$GBRAIN_HOME" ]; then
+    echo "[hermes-config-mcp] GBRAIN_HOME not set, using default /data/.gbrain"
+    GBRAIN_HOME="/data/.gbrain"
 fi
 
-# Append MCP configuration to config.yaml
-cat >> "$CONFIG_PATH" << 'MCPEOF'
+# Remove any existing MCP section (so we rewrite cleanly on every boot)
+if grep -q "^mcp:" "$CONFIG_PATH"; then
+    echo "[hermes-config-mcp] Removing previous MCP section..."
+    awk 'BEGIN{skip=0}
+         /^mcp:/{skip=1; next}
+         skip && /^[a-z]/ {skip=0}
+         !skip' "$CONFIG_PATH" > "${CONFIG_PATH}.tmp"
+    mv "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
+fi
 
-# GBrain MCP Server Integration
+# Append MCP configuration with EXPANDED env vars (unquoted heredoc = expansion)
+cat >> "$CONFIG_PATH" << MCPEOF
+
+# GBrain MCP Server Integration (stdio transport — Hermes spawns on demand)
 mcp:
   servers:
     gbrain:
@@ -32,3 +45,5 @@ mcp:
 MCPEOF
 
 echo "[hermes-config-mcp] GBrain MCP server configured in Hermes config"
+echo "[hermes-config-mcp]   DATABASE_URL:  ${DATABASE_URL:+set (${#DATABASE_URL} chars)}"
+echo "[hermes-config-mcp]   GBRAIN_HOME:   ${GBRAIN_HOME}"
