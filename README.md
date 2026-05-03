@@ -20,6 +20,28 @@ Deploy [Hermes Agent](https://github.com/NousResearch/hermes-agent) on [Railway]
 - **Basic Auth** — password-protected admin panel
 - **Reset Config** — one-click reset to start fresh
 
+## Railway Setup
+
+When creating a new project in Railway, you must configure the following:
+
+### 1. Create a Postgres Database
+
+1. In your Railway project, click **+ New** and select **Database**
+2. Choose **Postgres** from the database options
+3. Railway will automatically provision a Postgres instance
+
+### 2. Add Environment Variables to the VM
+
+In your Railway service environment variables, add the following references to your Postgres database:
+
+```
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+PGPASSWORD=${{Postgres.PGPASSWORD}}
+PGUSER=${{Postgres.PGUSER}}
+```
+
+These variables will be automatically populated from your Postgres database service.
+
 ## Getting Started
 
 The easiest way to get started:
