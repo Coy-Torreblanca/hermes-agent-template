@@ -21,7 +21,7 @@ echo "    Label:  $FOLDER_LABEL"
 echo "    Device: $DEVICE_ID"
 
 cat > "$CONFIG" << XMLEOF
-<configuration version="37">
+<configuration version="36">
     <folder id="default" label="$FOLDER_LABEL" path="$FOLDER_PATH" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <device id="$DEVICE_ID" introducedBy=""></device>
     </folder>
