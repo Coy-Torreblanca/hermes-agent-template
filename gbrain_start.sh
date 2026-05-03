@@ -19,6 +19,25 @@ if [ -z "$DATABASE_URL" ]; then
     exit 1
 fi
 
+# Wait for the database to be reachable (Railway Postgres pods can be asleep on cold start)
+if [ -n "$DATABASE_URL" ]; then
+    DB_HOST=$(echo "$DATABASE_URL" | sed -n 's|.*@\([^:/]*\).*|\1|p')
+    DB_PORT=$(echo "$DATABASE_URL" | sed -n 's|.*:\([0-9]*\)/.*|\1|p')
+    DB_PORT="${DB_PORT:-5432}"
+    echo "[gbrain-start] Waiting for database at $DB_HOST:$DB_PORT..."
+    for i in $(seq 1 30); do
+        if timeout 3 bash -c "echo > /dev/tcp/$DB_HOST/$DB_PORT" 2>/dev/null; then
+            echo "[gbrain-start] Database is reachable (attempt $i)"
+            break
+        fi
+        if [ $i -eq 30 ]; then
+            echo "[gbrain-start] ERROR: Database unreachable after 30 attempts — giving up"
+            exit 1
+        fi
+        sleep 2
+    done
+fi
+
 # Initialize GBrain with Postgres database if not already initialized
 if [ ! -f "$GBRAIN_HOME/config.json" ]; then
     echo "[gbrain-start] Running gbrain init with Postgres..."
