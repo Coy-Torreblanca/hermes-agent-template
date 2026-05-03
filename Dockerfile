@@ -35,7 +35,7 @@ COPY hermes_start.sh /app/hermes_start.sh
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/start.sh
+RUN chmod +x /app/hermes_start.sh
 
 ENV HOME=/data
 ENV HERMES_HOME=/data/.hermes
