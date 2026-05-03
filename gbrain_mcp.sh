@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e
 
-echo "[gbrain-mcp] Starting GBrain MCP server..."
+echo "[gbrain-mcp] Starting GBrain MCP server (stdio transport)..."
 
-# The MCP server uses stdio transport, so it communicates via stdin/stdout
-# Hermes will connect to this server via the MCP protocol
-cd /opt/gbrain
-bun run src/cli.ts serve
+# Hermes spawns this script as a child process and communicates via stdin/stdout.
+# The gbrain CLI resolves its own package root, so no cd /opt/gbrain needed.
+exec gbrain serve
 
 echo "[gbrain-mcp] MCP server stopped"
