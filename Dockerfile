@@ -44,10 +44,12 @@ COPY templates/ /app/templates/
 COPY hermes_start.sh /app/hermes_start.sh
 COPY syncthing_config.sh /app/syncthing_config.sh
 COPY gbrain_start.sh /app/gbrain_start.sh
+COPY gbrain_sync.sh /app/gbrain_sync.sh
+COPY gbrain_dream.sh /app/gbrain_dream.sh
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh
+RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh
 
 ENV HOME=/data
 ENV HERMES_HOME=/data/.hermes

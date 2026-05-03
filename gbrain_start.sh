@@ -31,4 +31,14 @@ fi
 echo "[gbrain-start] Running gbrain doctor..."
 gbrain doctor --json
 
+# Import brain files from Syncthing folder if they exist
+if [ -d "$BRAIN_PATH" ] && [ "$(find "$BRAIN_PATH" -name '*.md' -type f 2>/dev/null | wc -l)" -gt 0 ]; then
+    echo "[gbrain-start] Found markdown files in $BRAIN_PATH, importing..."
+    gbrain import "$BRAIN_PATH" --no-embed
+    echo "[gbrain-start] Generating vector embeddings..."
+    gbrain embed --stale
+else
+    echo "[gbrain-start] No markdown files found in $BRAIN_PATH, skipping import"
+fi
+
 echo "[gbrain-start] GBrain initialization complete"
