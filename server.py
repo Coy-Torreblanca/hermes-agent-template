@@ -157,10 +157,35 @@ def read_env(path: Path) -> dict[str, str]:
 
 
 def write_config_yaml(data: dict[str, str]) -> None:
-    """Write a minimal config.yaml so hermes picks up the model and provider."""
+    """Write a minimal config.yaml so hermes picks up the model and provider.
+
+    Preserves any mcp: section from the existing config so that the GBrain
+    MCP server integration (written by hermes_config_mcp.sh at boot) survives
+    config rewrites triggered by gateway starts and admin UI saves.
+    """
     model = data.get("LLM_MODEL", "")
     config_path = Path(HERMES_HOME) / "config.yaml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Snapshot the mcp: block from the existing file before overwriting
+    mcp_block = ""
+    if config_path.exists():
+        old_lines = config_path.read_text().splitlines()
+        in_mcp = False
+        mcp_lines = []
+        for line in old_lines:
+            stripped = line.lstrip()
+            if stripped.startswith("mcp:"):
+                in_mcp = True
+                mcp_lines.append(line)
+            elif in_mcp:
+                if stripped and not line[0] in (' ', '\t'):
+                    in_mcp = False  # new top-level key, mcp block ended
+                else:
+                    mcp_lines.append(line)
+        if mcp_lines:
+            mcp_block = "\n" + "\n".join(mcp_lines)
+
     config_path.write_text(f"""\
 model:
   default: "{model}"
@@ -175,6 +200,7 @@ agent:
   max_iterations: 50
 
 data_dir: "{HERMES_HOME}"
+{mcp_block}
 """)
 
 
