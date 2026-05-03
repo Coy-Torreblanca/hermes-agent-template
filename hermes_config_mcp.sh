@@ -22,10 +22,10 @@ if [ -z "$GBRAIN_HOME" ]; then
 fi
 
 # Remove any existing MCP section (so we rewrite cleanly on every boot)
-if grep -q "^mcp:" "$CONFIG_PATH"; then
+if grep -qE "^mcp(_servers)?:" "$CONFIG_PATH"; then
     echo "[hermes-config-mcp] Removing previous MCP section..."
     awk 'BEGIN{skip=0}
-         /^mcp:/{skip=1; next}
+         /^mcp(_servers)?:/{skip=1; next}
          skip && /^[a-z]/ {skip=0}
          !skip' "$CONFIG_PATH" > "${CONFIG_PATH}.tmp"
     mv "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
@@ -35,13 +35,19 @@ fi
 cat >> "$CONFIG_PATH" << MCPEOF
 
 # GBrain MCP Server Integration (stdio transport — Hermes spawns on demand)
-mcp:
-  servers:
-    gbrain:
-      command: /app/gbrain_mcp.sh
-      env:
-        DATABASE_URL: ${DATABASE_URL}
-        GBRAIN_HOME: ${GBRAIN_HOME}
+mcp_servers:
+  gbrain:
+    command: "bun"
+    args:
+      - "--cwd=/opt/gbrain"
+      - "run"
+      - "src/cli.ts"
+      - "serve"
+    env:
+      DATABASE_URL: "${DATABASE_URL}"
+      GBRAIN_HOME: "${GBRAIN_HOME}"
+    timeout: 60
+    connect_timeout: 30
 MCPEOF
 
 echo "[hermes-config-mcp] GBrain MCP server configured in Hermes config"
