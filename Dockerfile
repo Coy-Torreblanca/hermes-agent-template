@@ -47,13 +47,16 @@ COPY gbrain_start.sh /app/gbrain_start.sh
 COPY gbrain_sync.sh /app/gbrain_sync.sh
 COPY gbrain_dream.sh /app/gbrain_dream.sh
 COPY gbrain_check_update.sh /app/gbrain_check_update.sh
+COPY gbrain_check_update_loop.sh /app/gbrain_check_update_loop.sh
 COPY gbrain_weekly.sh /app/gbrain_weekly.sh
+COPY gbrain_weekly_loop.sh /app/gbrain_weekly_loop.sh
+COPY gbrain_dream_loop.sh /app/gbrain_dream_loop.sh
 COPY gbrain_mcp.sh /app/gbrain_mcp.sh
 COPY hermes_config_mcp.sh /app/hermes_config_mcp.sh
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh /app/gbrain_check_update.sh /app/gbrain_weekly.sh /app/gbrain_mcp.sh /app/hermes_config_mcp.sh
+RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh /app/gbrain_check_update.sh /app/gbrain_check_update_loop.sh /app/gbrain_weekly.sh /app/gbrain_weekly_loop.sh /app/gbrain_dream_loop.sh /app/gbrain_mcp.sh /app/hermes_config_mcp.sh
 
 ENV HOME=/data
 ENV HERMES_HOME=/data/.hermes
