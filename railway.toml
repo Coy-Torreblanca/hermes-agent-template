@@ -12,3 +12,7 @@ healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
+
+[volume]
+mountPath = "/data"
+sizeGB = 5
