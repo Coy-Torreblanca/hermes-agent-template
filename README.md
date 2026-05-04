@@ -1,34 +1,58 @@
 # Hermes Agent — Railway Template
 
-Deploy [Hermes Agent](https://github.com/NousResearch/hermes-agent) on [Railway](https://railway.app) with a web-based admin dashboard for configuration, gateway management, and user pairing.
+## Railway Setup
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/hermes-agent-ai?referralCode=QXdhdr&utm_medium=integration&utm_source=template&utm_campaign=generic)
+When creating a new project in Railway, you must configure the following:
 
-> Hermes Agent is an autonomous AI agent by [Nous Research](https://nousresearch.com/) that lives on your server, connects to your messaging channels (Telegram, Discord, Slack, etc.), and gets more capable the longer it runs.
+### 1. Create a Postgres Database
 
-<!-- TODO: Add dashboard screenshot -->
-<!-- ![Dashboard](docs/dashboard.png) -->
+1. In your Railway project, click **+ New** and select **Database**
+2. Choose **Postgres** from the database options
+3. Railway will automatically provision a Postgres instance
 
-## Features
+### 2. Add Environment Variables
 
-- **Admin Dashboard** — dark-themed UI to configure providers, channels, tools, and manage the gateway
-- **One-Page Setup** — provider dropdown, checkbox-based channel/tool toggles — no config files to edit
-- **Gateway Management** — start, stop, restart the Hermes gateway from the browser
-- **Live Status** — stat cards for gateway state, uptime, model, and pending pairing requests
-- **Live Logs** — streaming gateway log viewer
-- **User Pairing** — approve or deny users who message your bot, revoke access anytime
-- **Basic Auth** — password-protected admin panel
-- **Reset Config** — one-click reset to start fresh
+In your Railway service's **Variables** tab, add the following:
+
+#### Database (auto-populated from Postgres service)
+```
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+PGPASSWORD=${{Postgres.PGPASSWORD}}
+PGUSER=${{Postgres.PGUSER}}
+```
+
+#### LLM Provider (DeepSeek)
+```
+DEEPSEEK_API_KEY=sk-your-deepseek-api-key
+HERMES_MODEL=deepseek-v4-pro
+```
+
+#### Telegram Bot
+```
+TELEGRAM_BOT_TOKEN=<your-telegram-bot-token>
+TELEGRAM_ALLOWED_USERS=<your-telegram-user-id>
+```
+
+#### Optional: Vector Search (GBrain)
+```
+OPENAI_API_KEY=sk-your-openai-api-key
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key
+```
+
+Once these variables are set, Railway will automatically spin up a new deployment using the DeepSeek V4 models.
 
 ## Getting Started
 
-The easiest way to get started:
+Follow the **Railway Setup** section above first to configure your environment variables. Then:
 
-### 1. Get an LLM Provider Key (free)
+### 1. Get Your API Keys
 
-1. Register for free at [OpenRouter](https://openrouter.ai/)
-2. Create an API key from your [OpenRouter dashboard](https://openrouter.ai/keys)
-3. Pick a free model from the [model list sorted by price](https://openrouter.ai/models?order=pricing-low-to-high) (e.g. `google/gemma-3-1b-it:free`, `meta-llama/llama-3.1-8b-instruct:free`)
+**DeepSeek** (recommended for V4 models):
+1. Sign up at [DeepSeek](https://platform.deepseek.com/)
+2. Create an API key from your dashboard
+3. Add to Railway Variables: `DEEPSEEK_API_KEY=sk-...`
+
+**Alternative**: Use [OpenRouter](https://openrouter.ai/) for other models
 
 ### 2. Set Up a Telegram Bot (fastest channel)
 
@@ -46,11 +70,18 @@ Hermes Agent interacts entirely through messaging channels — there is no chat 
 3. Attach a **volume** mounted at `/data` (persists config across redeploys)
 4. Open your app URL — log in with username `admin` and your password
 
-### 4. Configure in the Admin Dashboard
+### 4. Verify Configuration
 
-1. **LLM Provider** — select OpenRouter from the dropdown, paste your API key, enter the model name
-2. **Messaging Channel** — check Telegram, paste the Bot Token from BotFather
-3. Click **Save & Start** — the gateway will start and your bot goes live
+Since you've already set the environment variables in Railway:
+
+1. **LLM Provider** — DeepSeek V4 Pro is already configured
+2. **Messaging Channel** — Telegram is already configured with your bot token
+3. The gateway will start automatically — no additional setup needed in the dashboard
+
+You can still use the admin dashboard to:
+- Add additional channels (Discord, Slack, etc.)
+- Configure additional tools and integrations
+- Manage user access and pairing requests
 
 ### 5. Start Chatting
 
