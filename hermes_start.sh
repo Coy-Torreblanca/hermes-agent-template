@@ -11,7 +11,8 @@ mkdir -p /data/.hermes/cron /data/.hermes/sessions /data/.hermes/logs \
          /data/.hermes/workspace
 
 if [ ! -f /data/.hermes/config.yaml ] && [ -f /opt/hermes-agent/cli-config.yaml.example ]; then
-  cp /opt/hermes-agent/cli-config.yaml.example /data/.hermes/config.yaml
+  cp /app/hermes_setup/config.yaml /data/.hermes/config.yaml
+  cp /app/hermes_setup/hermes_env /data/.hermes/.env
 fi
 
 [ ! -f /data/.hermes/.env ] && touch /data/.hermes/.env
