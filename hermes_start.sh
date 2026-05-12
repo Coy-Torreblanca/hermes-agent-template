@@ -25,4 +25,7 @@ fi
 # container), so removing the file unconditionally is safe.
 rm -f /data/.hermes/gateway.pid
 
+# Copy skills from main repo over to .hermes.
+cp -r /opt/hermes/skills /data/.hermes/
+
 exec python /app/server.py
