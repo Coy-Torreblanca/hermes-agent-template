@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-ARG HERMES_REF=v2026.4.30
+ARG HERMES_REF=main
 
 # Added 'supervisor' and 'syncthing' to the apt-get list
 RUN apt-get update && \
@@ -15,7 +15,7 @@ RUN curl -fsSL https://bun.sh/install | bash && \
     ln -s /root/.bun/bin/bun /usr/local/bin/bun
 
 # [Existing Hermes Build Steps...]
-RUN git clone --depth 1 --branch ${HERMES_REF} https://github.com/NousResearch/hermes-agent.git /opt/hermes-agent && \
+RUN git clone --depth 1 --branch ${HERMES_REF} https://github.com/Coy-Torreblanca/hermes-agent.git /opt/hermes-agent && \
     cd /opt/hermes-agent && \
     uv pip install --system --no-cache -e ".[all]" && \
     cd /opt/hermes-agent/web && \
