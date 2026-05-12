@@ -6,6 +6,22 @@ CONFIG_PATH="$HERMES_HOME/config.yaml"
 
 echo "[hermes-config-mcp] Updating Hermes config with GBrain MCP integration..."
 
+echo "[hermes-config-mcp] Waiting for Hermes to create config at $CONFIG_PATH..."
+
+# Wait up to 30 seconds for the file to appear
+MAX_RETRIES=30
+COUNT=0
+while [ ! -f "$CONFIG_PATH" ]; do
+    if [ "$COUNT" -eq "$MAX_RETRIES" ]; then
+        echo "[hermes-config-mcp] ERROR: Config not found after ${MAX_RETRIES}s. Exiting."
+        exit 1
+    fi
+    sleep 1
+    ((COUNT++))
+done
+
+echo "[hermes-config-mcp] Config found! Proceeding with MCP setup..."
+
 # Check if config exists
 if [ ! -f "$CONFIG_PATH" ]; then
     echo "[hermes-config-mcp] Config not found at $CONFIG_PATH, skipping MCP setup"
