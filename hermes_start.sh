@@ -18,6 +18,9 @@ if [ ! -f /data/.hermes/config.yaml ] && [ -f /opt/hermes-agent/cli-config.yaml.
 
 fi
 
+# Copy SOUL.md
+cp /app/hermes_setup/SOUL.md /data/hermes/SOUL.md
+
 [ ! -f /data/.hermes/.env ] && touch /data/.hermes/.env
 
 # Clear any stale gateway PID file left over from the previous container.
