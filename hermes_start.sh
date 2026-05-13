@@ -10,13 +10,9 @@ mkdir -p /data/.hermes/cron /data/.hermes/sessions /data/.hermes/logs \
          /data/.hermes/hooks /data/.hermes/image_cache /data/.hermes/audio_cache \
          /data/.hermes/workspace
 
-if [ ! -f /data/.hermes/config.yaml ] && [ -f /opt/hermes-agent/cli-config.yaml.example ]; then
-  
-  # Resolve variables in config.yaml and write directly to the destination
-  envsubst < /app/hermes_setup/config.yaml > /data/.hermes/config.yaml
-  envsubst < /app/hermes_setup/hermes_env > /data/.hermes/.env
-
-fi
+# Resolve variables in config.yaml and write directly to the destination
+envsubst < /app/hermes_setup/config.yaml > /data/.hermes/config.yaml
+envsubst < /app/hermes_setup/hermes_env > /data/.hermes/.env
 
 # Copy SOUL.md
 cp /app/hermes_setup/SOUL.md /data/.hermes/SOUL.md
