@@ -24,9 +24,10 @@ cp /app/hermes_setup/SOUL.md /data/.hermes/SOUL.md
 # Copy GBRAIN SystemPrompt.
 cp /opt/hermes-agent/skills/gbrain/second-brain/references/resolver.md /data/.hermes/memories/USER.md
 
-# Redploy base skills.
+# Redploy base skills and plugins.
 cp -r /opt/hermes-agent/skills/gbrain /data/.hermes/skills/gbrain
 cp -r /opt/hermes-agent/skills/coy /data/.hermes/skills/coy
+cp -r /opt/hermes-agent/plugins /data/.hermes/plugins
 
 # Clear any stale gateway PID file left over from the previous container.
 # `hermes gateway` writes /data/.hermes/gateway.pid on start but does not
