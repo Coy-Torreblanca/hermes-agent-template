@@ -42,6 +42,6 @@ cp -r /opt/hermes-agent/skills/ /data/.hermes/
 
 # Sync cron jobs from declarative config (survives ephemeral redeploys)
 echo "Syncing cron jobs..."
-python3 /data/gbrain-hermes/hermes_cron/sync.py
+python3 /app/hermes_cron/sync.py
 
 exec python /app/server.py
