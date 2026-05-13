@@ -57,7 +57,7 @@ COPY hermes_setup/ /app/hermes_setup/
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh /app/gbrain_check_update.sh /app/gbrain_check_update_loop.sh /app/gbrain_weekly.sh /app/gbrain_weekly_loop.sh /app/gbrain_dream_loop.sh /app/gbrain_mcp.sh /app/hermes_setup/*
+RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh /app/gbrain_weekly.sh /app/gbrain_weekly_loop.sh /app/gbrain_dream_loop.sh /app/gbrain_mcp.sh /app/hermes_setup/*
 
 ENV HOME=/data
 ENV PATH="/root/.bun/bin:$PATH"
