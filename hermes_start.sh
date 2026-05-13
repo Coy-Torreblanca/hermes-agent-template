@@ -2,7 +2,8 @@
 set -e
 
 # Ensure we have proper permissions
-sudo chown -R $(whoami):$(whoami) /data/.hermes
+echo 'here'
+whoami
 
 # Mirror dashboard-ref-only's startup: create every directory hermes expects
 # and seed a default config.yaml if the volume is empty. Without these,
@@ -14,8 +15,8 @@ mkdir -p /data/.hermes/cron /data/.hermes/sessions /data/.hermes/logs \
          /data/.hermes/workspace
 
 # Resolve variables in config.yaml and write directly to the destination
-envsubst < /app/hermes_setup/config.yaml | sudo tee /data/.hermes/config.yaml > /dev/null
-envsubst < /app/hermes_setup/hermes_env | sudo tee /data/.hermes/.env > /dev/null
+envsubst < /app/hermes_setup/config.yaml > /data/.hermes/config.yaml 
+envsubst < /app/hermes_setup/hermes_env > /data/.hermes/.env 
 
 # Copy SOUL.md
 cp /app/hermes_setup/SOUL.md /data/.hermes/SOUL.md
