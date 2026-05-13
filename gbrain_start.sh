@@ -12,10 +12,11 @@ echo "[gbrain-start] Initializing GBrain..."
 echo "    Home: $GBRAIN_HOME"
 echo "    Brain Path: $BRAIN_PATH"
 
-# Create Gbrain config.
+# Create GBrain config with lowercase keys (matches GBrain's expected format)
 cat <<EOF > "$GBRAIN_HOME/config.json"
 {
-  "OPENAI_API_KEY": "$GBRAIN_OPENAI_KEY"
+  "openai_api_key": "$GBRAIN_OPENAI_KEY",
+  "anthropic_api_key": "$GBRAIN_ANTHROPIC_KEY"
 }
 EOF
 
