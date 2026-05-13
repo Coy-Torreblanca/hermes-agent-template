@@ -152,3 +152,6 @@ mcp_servers:
 
     timeout: 60
     connect_timeout: 30
+plugins:
+  enabled:
+    - signal-detector
