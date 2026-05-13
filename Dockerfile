@@ -53,6 +53,7 @@ COPY gbrain_weekly_loop.sh /app/gbrain_weekly_loop.sh
 COPY gbrain_dream_loop.sh /app/gbrain_dream_loop.sh
 COPY gbrain_mcp.sh /app/gbrain_mcp.sh
 COPY hermes_setup/ /app/hermes_setup/
+COPY hermes_cron/ /app/hermes_cron/
 
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
