@@ -147,5 +147,8 @@ mcp_servers:
       DATABASE_URL: "${DATABASE_URL}"
       GBRAIN_HOME: "${GBRAIN_HOME}"
       BRAIN_PATH: "${SYNCTHING_FOLDER_PATH:-/data/syncthing/Sync}"
+      OPENAI_API_KEY: "${GBRAIN_OPENAI_KEY}"
+      ANTHROPIC_API_KEY: "${GBRAIN_ANTHROPIC_KEY}"
+
     timeout: 60
     connect_timeout: 30
