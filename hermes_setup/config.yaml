@@ -1,7 +1,7 @@
 ---
 model:
   default: "${LLM_MODEL}"
-  provider: auto
+  provider: "${LLM_PROVIDER}"
 terminal:
   backend: local
   cwd: .
