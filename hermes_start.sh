@@ -11,10 +11,22 @@ mkdir -p /data/.hermes/cron /data/.hermes/sessions /data/.hermes/logs \
          /data/.hermes/workspace
 
 if [ ! -f /data/.hermes/config.yaml ] && [ -f /opt/hermes-agent/cli-config.yaml.example ]; then
-  cp /opt/hermes-agent/cli-config.yaml.example /data/.hermes/config.yaml
+  
+  # Resolve variables in config.yaml and write directly to the destination
+  envsubst < /app/hermes_setup/config.yaml > /data/.hermes/config.yaml
+  envsubst < /app/hermes_setup/hermes_env > /data/.hermes/.env
+
 fi
 
-[ ! -f /data/.hermes/.env ] && touch /data/.hermes/.env
+# Copy SOUL.md
+cp /app/hermes_setup/SOUL.md /data/.hermes/SOUL.md
+
+# Copy GBRAIN SystemPrompt.
+cp /opt/hermes-agent/skills/gbrain/second-brain/references/resolver.md /data/.hermes/memories/USER.md
+
+# Redploy base skills.
+cp -r /opt/hermes-agent/skills/gbrain /data/.hermes/skills/gbrain
+cp -r /opt/hermes-agent/skills/coy /data/.hermes/skills/coy
 
 # Clear any stale gateway PID file left over from the previous container.
 # `hermes gateway` writes /data/.hermes/gateway.pid on start but does not

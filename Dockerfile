@@ -5,7 +5,7 @@ ARG HERMES_REF=main
 # Added 'supervisor' and 'syncthing' to the apt-get list
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    curl ca-certificates git tini supervisor syncthing unzip && \
+    curl ca-certificates git tini supervisor syncthing unzip gettext-base && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
     rm -rf /var/lib/apt/lists/*
@@ -52,11 +52,12 @@ COPY gbrain_weekly.sh /app/gbrain_weekly.sh
 COPY gbrain_weekly_loop.sh /app/gbrain_weekly_loop.sh
 COPY gbrain_dream_loop.sh /app/gbrain_dream_loop.sh
 COPY gbrain_mcp.sh /app/gbrain_mcp.sh
-COPY hermes_config_mcp.sh /app/hermes_config_mcp.sh
+COPY hermes_setup/ /app/hermes_setup/
+
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh /app/gbrain_check_update.sh /app/gbrain_check_update_loop.sh /app/gbrain_weekly.sh /app/gbrain_weekly_loop.sh /app/gbrain_dream_loop.sh /app/gbrain_mcp.sh /app/hermes_config_mcp.sh
+RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_sync.sh /app/gbrain_dream.sh /app/gbrain_check_update.sh /app/gbrain_check_update_loop.sh /app/gbrain_weekly.sh /app/gbrain_weekly_loop.sh /app/gbrain_dream_loop.sh /app/gbrain_mcp.sh /app/hermes_setup/*
 
 ENV HOME=/data
 ENV PATH="/root/.bun/bin:$PATH"
