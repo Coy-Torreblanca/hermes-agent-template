@@ -1,15 +1,4 @@
 jobs:
-- name: gbrain-sync
-  schedule: every 2h
-  prompt: "Run gbrain sync with --no-pull (repo is already pulled by Railway). Report\
-    \ only if there are errors or new pages synced. Keep it brief \u2014 one sentence\
-    \ if clean.\n"
-  skills:
-  - second-brain
-  deliver: discord
-  enabled_toolsets:
-  - terminal
-  - file
 - name: gbrain-contradictions
   schedule: 0 9 * * *
   prompt: "Run gbrain eval suspected-contradictions. If any high-severity contradictions\
@@ -25,9 +14,37 @@ jobs:
 - name: gbrain-doctor
   schedule: 0 9 * * 1
   prompt: 'Run gbrain doctor and report the health dashboard summary. Include: page
-    count, embed coverage, stale pages, and orphan count.
-
-    '
+    count, embed coverage, stale pages, orphan count, and health score.'
+  skills:
+  - second-brain
+  deliver: discord
+  enabled_toolsets:
+  - terminal
+  - file
+- name: gbrain-dream
+  schedule: 0 2 * * *
+  prompt: "Run the gbrain dream cycle (autopilot maintenance).\n\n1. Submit autopilot-cycle\
+    \ job via gbrain Minions:\n   gbrain job autopilot-cycle\n   (This handles: embed\
+    \ stale chunks, populate backlinks, lint pages, purge soft-deleted pages past\
+    \ 72h window)\n\n2. Wait for the job to complete (poll progress until done).\n\
+    \n3. Report a one-line summary: pages processed, embeddings generated, backlinks\
+    \ populated, pages purged.\n\nIf the Minions worker is down, report that the dream\
+    \ cycle couldn't run and ask to start the worker.\n"
+  skills:
+  - second-brain
+  deliver: discord
+  enabled_toolsets:
+  - terminal
+  - file
+- name: gbrain-orphans
+  schedule: 0 9 * * 6
+  prompt: "Surface orphan pages from gbrain for enrichment.\n\n1. Run gbrain find-orphans\
+    \ to list pages with no inbound links.\n2. If orphans > 50: report count + top\
+    \ 10 (sorted by most recent).\n3. If orphans \u2264 50: list all orphans with\
+    \ their type and last-updated date.\n4. If 0 orphans: respond with \"\U0001F3AE\
+    \ Zero orphan pages \u2014 brain graph is fully connected.\"\n\nKeep it brief.\
+    \ This is a cue for Coy to decide which orphans to enrich, not an automated enrichment\
+    \ job.\n"
   skills:
   - second-brain
   deliver: discord
