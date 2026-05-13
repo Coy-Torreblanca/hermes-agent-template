@@ -1,0 +1,36 @@
+jobs:
+- name: gbrain-sync
+  schedule: every 2h
+  prompt: "Run gbrain sync with --no-pull (repo is already pulled by Railway). Report\
+    \ only if there are errors or new pages synced. Keep it brief \u2014 one sentence\
+    \ if clean.\n"
+  skills:
+  - second-brain
+  deliver: discord
+  enabled_toolsets:
+  - terminal
+  - file
+- name: gbrain-contradictions
+  schedule: 0 9 * * *
+  prompt: "Run gbrain eval suspected-contradictions. If any high-severity contradictions\
+    \ are found, list them with a brief summary. Medium-severity: mention count only.\
+    \ If clean, respond with \"\U0001F9E0 Brain is consistent \u2014 no contradictions\
+    \ found.\"\n"
+  skills:
+  - second-brain
+  deliver: discord
+  enabled_toolsets:
+  - terminal
+  - file
+- name: gbrain-doctor
+  schedule: 0 9 * * 1
+  prompt: 'Run gbrain doctor and report the health dashboard summary. Include: page
+    count, embed coverage, stale pages, and orphan count.
+
+    '
+  skills:
+  - second-brain
+  deliver: discord
+  enabled_toolsets:
+  - terminal
+  - file

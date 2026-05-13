@@ -40,4 +40,8 @@ rm -f /data/.hermes/gateway.pid
 # Copy skills from main repo over to .hermes.
 cp -r /opt/hermes-agent/skills/ /data/.hermes/
 
+# Sync cron jobs from declarative config (survives ephemeral redeploys)
+echo "Syncing cron jobs..."
+python3 /data/gbrain-hermes/hermes_cron/sync.py
+
 exec python /app/server.py
