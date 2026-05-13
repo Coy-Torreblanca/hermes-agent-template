@@ -28,8 +28,8 @@ tool_loop_guardrails:
     idempotent_no_progress: 5
 compression:
   enabled: true
-  threshold: 0.5
-  target_ratio: 0.2
+  threshold: 0.8
+  target_ratio: 0.4
   protect_last_n: 20
 prompt_caching:
   cache_ttl: 5m
