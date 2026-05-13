@@ -44,13 +44,6 @@ COPY templates/ /app/templates/
 COPY hermes_start.sh /app/hermes_start.sh
 COPY syncthing_config.sh /app/syncthing_config.sh
 COPY gbrain_start.sh /app/gbrain_start.sh
-COPY gbrain_sync.sh /app/gbrain_sync.sh
-COPY gbrain_dream.sh /app/gbrain_dream.sh
-COPY gbrain_check_update.sh /app/gbrain_check_update.sh
-COPY gbrain_check_update_loop.sh /app/gbrain_check_update_loop.sh
-COPY gbrain_weekly.sh /app/gbrain_weekly.sh
-COPY gbrain_weekly_loop.sh /app/gbrain_weekly_loop.sh
-COPY gbrain_dream_loop.sh /app/gbrain_dream_loop.sh
 COPY gbrain_mcp.sh /app/gbrain_mcp.sh
 COPY hermes_setup/ /app/hermes_setup/
 COPY hermes_cron/ /app/hermes_cron/
