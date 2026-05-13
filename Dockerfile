@@ -15,7 +15,7 @@ RUN curl -fsSL https://bun.sh/install | bash && \
     ln -s /root/.bun/bin/bun /usr/local/bin/bun
 
 # [Existing Hermes Build Steps...]
-RUN git clone --depth 1 --branch ${HERMES_REF} https://github.com/Coy-Torreblanca/hermes-agent.git /opt/hermes-agent && \
+RUN git clone --branch ${HERMES_REF} https://github.com/Coy-Torreblanca/hermes-agent.git /opt/hermes-agent && \
     cd /opt/hermes-agent && \
     uv pip install --system --no-cache -e ".[all]" && \
     cd /opt/hermes-agent/web && \
