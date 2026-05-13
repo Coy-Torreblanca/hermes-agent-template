@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Ensure we have proper permissions
+sudo chown -R $(whoami):$(whoami) /data/.hermes
+
 # Mirror dashboard-ref-only's startup: create every directory hermes expects
 # and seed a default config.yaml if the volume is empty. Without these,
 # `hermes dashboard` endpoints that hit logs/, sessions/, cron/, etc. can fail
