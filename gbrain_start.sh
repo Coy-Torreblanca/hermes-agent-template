@@ -12,6 +12,13 @@ echo "[gbrain-start] Initializing GBrain..."
 echo "    Home: $GBRAIN_HOME"
 echo "    Brain Path: $BRAIN_PATH"
 
+# Create Gbrain config.
+cat <<EOF > "$GBRAIN_HOME/config.json"
+{
+  "openai_api_key": "$GBRAIN_OPENAI_KEY"
+}
+EOF
+
 # Check if DATABASE_URL is set
 if [ -z "$DATABASE_URL" ]; then
     echo "[gbrain-start] ERROR: DATABASE_URL environment variable not set"
