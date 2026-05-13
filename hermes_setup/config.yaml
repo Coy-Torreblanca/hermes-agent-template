@@ -1,8 +1,7 @@
 ---
 model:
-  default: ${LLM_MODEL:-anthropic/claude-opus-4.6}
+  default: "${LLM_MODEL}"
   provider: auto
-  base_url: https://openrouter.ai/api/v1
 terminal:
   backend: local
   cwd: .
@@ -146,7 +145,7 @@ mcp_servers:
     env:
       DATABASE_URL: "${DATABASE_URL}"
       GBRAIN_HOME: "${GBRAIN_HOME}"
-      BRAIN_PATH: "${SYNCTHING_FOLDER_PATH:-/data/syncthing/Sync}"
+      BRAIN_PATH: "${SYNCTHING_FOLDER_PATH}"
       OPENAI_API_KEY: "${GBRAIN_OPENAI_KEY}"
       ANTHROPIC_API_KEY: "${GBRAIN_ANTHROPIC_KEY}"
 
