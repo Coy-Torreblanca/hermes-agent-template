@@ -15,7 +15,7 @@ echo "    Brain Path: $BRAIN_PATH"
 # Create Gbrain config.
 cat <<EOF > "$GBRAIN_HOME/config.json"
 {
-  "openai_api_key": "$GBRAIN_OPENAI_KEY"
+  "OPENAI_API_KEY": "$GBRAIN_OPENAI_KEY"
 }
 EOF
 

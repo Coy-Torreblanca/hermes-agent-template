@@ -11,8 +11,8 @@ mkdir -p /data/.hermes/cron /data/.hermes/sessions /data/.hermes/logs \
          /data/.hermes/workspace
 
 # Resolve variables in config.yaml and write directly to the destination
-envsubst < /app/hermes_setup/config.yaml > /data/.hermes/config.yaml
-envsubst < /app/hermes_setup/hermes_env > /data/.hermes/.env
+envsubst < /app/hermes_setup/config.yaml | sudo tee /data/.hermes/config.yaml > /dev/null
+envsubst < /app/hermes_setup/hermes_env | sudo tee /data/.hermes/.env > /dev/null
 
 # Copy SOUL.md
 cp /app/hermes_setup/SOUL.md /data/.hermes/SOUL.md
@@ -33,9 +33,6 @@ cp -r /opt/hermes-agent/plugins /data/.hermes/plugins
 # No hermes process can be running at this point (we're pre-exec in a fresh
 # container), so removing the file unconditionally is safe.
 rm -f /data/.hermes/gateway.pid
-
-# Copy skills from main repo over to .hermes.
-cp -r /opt/hermes-agent/skills/ /data/.hermes/
 
 # Sync cron jobs from declarative config (survives ephemeral redeploys)
 echo "Syncing cron jobs..."
