@@ -60,26 +60,19 @@ fi
 cp /opt/hermes-agent/skills/gbrain/second-brain/references/resolver.md /data/.hermes/memories/USER.md
 echo "✓ USER.md copied"
 
-# Redeploy base skills and plugins.
-echo "Copying skills and plugins..."
-if [ ! -d /opt/hermes-agent/skills/gbrain ]; then
-  echo "ERROR: /opt/hermes-agent/skills/gbrain not found!"
+# Redeploy all skills and plugins from the Hermes fork.
+echo "Copying all skills and plugins..."
+if [ ! -d /opt/hermes-agent/skills ]; then
+  echo "ERROR: /opt/hermes-agent/skills not found!"
   exit 1
 fi
-cp -r /opt/hermes-agent/skills/gbrain /data/.hermes/skills/gbrain
-echo "✓ gbrain skills copied"
-
-if [ ! -d /opt/hermes-agent/skills/coy ]; then
-  echo "WARNING: /opt/hermes-agent/skills/coy not found, skipping"
-else
-  cp -r /opt/hermes-agent/skills/coy /data/.hermes/skills/coy
-  echo "✓ coy skills copied"
-fi
+cp -r /opt/hermes-agent/skills/* /data/.hermes/skills/
+echo "✓ all skills copied"
 
 if [ ! -d /opt/hermes-agent/plugins ]; then
   echo "WARNING: /opt/hermes-agent/plugins not found, skipping"
 else
-  cp -r /opt/hermes-agent/plugins /data/.hermes/plugins
+  cp -r /opt/hermes-agent/plugins/* /data/.hermes/plugins/
   echo "✓ plugins copied"
 fi
 
