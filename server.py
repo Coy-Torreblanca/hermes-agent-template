@@ -159,54 +159,6 @@ def read_env(path: Path) -> dict[str, str]:
     return out
 
 
-def write_config_yaml(data: dict[str, str]) -> None:
-    """Write a minimal config.yaml so hermes picks up the model and provider.
-
-    Preserves any mcp_servers: section from the existing config so that the
-    GBrain MCP server integration (written by hermes_config_mcp.sh at boot)
-    survives config rewrites triggered by gateway starts and admin UI saves.
-    """
-    model = data.get("LLM_MODEL", "")
-    config_path = Path(HERMES_HOME) / "config.yaml"
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Snapshot the mcp_servers: block from the existing file before overwriting
-    mcp_block = ""
-    if config_path.exists():
-        old_lines = config_path.read_text().splitlines()
-        in_mcp = False
-        mcp_lines = []
-        for line in old_lines:
-            stripped = line.lstrip()
-            if stripped.startswith("mcp_servers:"):
-                in_mcp = True
-                mcp_lines.append(line)
-            elif in_mcp:
-                if stripped and not line[0] in (" ", "\t"):
-                    in_mcp = False  # new top-level key, mcp block ended
-                else:
-                    mcp_lines.append(line)
-        if mcp_lines:
-            mcp_block = "\n" + "\n".join(mcp_lines)
-
-    config_path.write_text(f"""\
-model:
-  default: "{model}"
-  provider: "auto"
-
-terminal:
-  backend: "local"
-  timeout: 60
-  cwd: "/tmp"
-
-agent:
-  max_iterations: 50
-
-data_dir: "{HERMES_HOME}"
-{mcp_block}
-""")
-
-
 def write_env(path: Path, data: dict[str, str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     cat_order = [
@@ -501,8 +453,6 @@ class Gateway:
                 f"[gateway] model={model or '⚠ NOT SET'} | provider_key={'set' if provider_key else '⚠ NOT SET'}",
                 flush=True,
             )
-            # Write config.yaml so hermes picks up the model (env vars alone aren't always enough)
-            write_config_yaml(read_env(ENV_FILE))
             self.proc = await asyncio.create_subprocess_exec(
                 "hermes",
                 "gateway",
@@ -700,7 +650,6 @@ async def api_config_put(request: Request):
                 if k not in merged:
                     merged[k] = v
             write_env(ENV_FILE, merged)
-            write_config_yaml(merged)
         if restart:
             asyncio.create_task(gw.restart())
         return JSONResponse({"ok": True, "restarting": restart})
@@ -766,7 +715,6 @@ async def api_config_reset(request: Request):
     async with cfg_lock:
         if ENV_FILE.exists():
             ENV_FILE.unlink()
-        write_config_yaml({})
     return JSONResponse({"ok": True})
 
 

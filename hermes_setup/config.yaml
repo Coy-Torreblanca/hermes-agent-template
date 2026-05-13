@@ -1,6 +1,6 @@
 ---
 model:
-  default: anthropic/claude-opus-4.6
+  default: ${LLM_MODEL:-anthropic/claude-opus-4.6}
   provider: auto
   base_url: https://openrouter.ai/api/v1
 terminal:
@@ -155,3 +155,4 @@ mcp_servers:
 plugins:
   enabled:
     - signal-detector
+data_dir: "/data/.hermes"
