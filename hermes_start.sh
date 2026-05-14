@@ -17,7 +17,7 @@ rm -rf /data/.hermes
 mkdir -p /data/.hermes/cron /data/.hermes/sessions /data/.hermes/logs \
          /data/.hermes/memories /data/.hermes/skills /data/.hermes/pairing \
          /data/.hermes/hooks /data/.hermes/image_cache /data/.hermes/audio_cache \
-         /data/.hermes/workspace
+         /data/.hermes/workspace /data/.hermes/plugins
 
 # Resolve variables in config.yaml and write directly to the destination
 echo "Copying and processing config.yaml..."
