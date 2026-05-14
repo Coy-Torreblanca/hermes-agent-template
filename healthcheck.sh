@@ -93,6 +93,29 @@ if [ -f "$CRON_CONFIG" ]; then
     # Check for sync.py
     if [ -f "/app/hermes_cron/sync.py" ]; then
         pass "cron/sync: sync.py found"
+
+        # Run dry-run to detect drift between config and cron state
+        SYNC_OUTPUT=$(python3 /app/hermes_cron/sync.py --dry-run 2>/dev/null)
+        ORPHANS=$(echo "$SYNC_OUTPUT" | grep -c "in state but not in config" || true)
+        PENDING=$(echo "$SYNC_OUTPUT" | grep -c "WOULD" || true)
+
+        if [ "$ORPHANS" -gt 0 ]; then
+            ORPHAN_JOBS=$(echo "$SYNC_OUTPUT" | grep "^- " | tr '\n' '; ' | sed 's/; $//')
+            warn "cron/drift: $ORPHANS orphan job(s) in state but not in config: $ORPHAN_JOBS"
+            warnings+=("$ORPHANS cron orphan(s): $ORPHAN_JOBS")
+            overall="warn"
+        fi
+
+        if [ "$PENDING" -gt 0 ]; then
+            PENDING_DETAILS=$(echo "$SYNC_OUTPUT" | grep "WOULD" | tr '\n' '; ' | sed 's/; $//')
+            warn "cron/drift: $PENDING pending change(s) — $PENDING_DETAILS"
+            warnings+=("$PENDING cron change(s) pending sync")
+            overall="warn"
+        fi
+
+        if [ "$ORPHANS" -eq 0 ] && [ "$PENDING" -eq 0 ]; then
+            pass "cron/sync: state matches config.yaml (no drift)"
+        fi
     else
         fail "cron/sync: sync.py MISSING"
         failures+=("sync.py missing")
