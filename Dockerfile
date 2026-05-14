@@ -44,14 +44,16 @@ COPY templates/ /app/templates/
 COPY hermes_start.sh /app/hermes_start.sh
 COPY syncthing_config.sh /app/syncthing_config.sh
 COPY gbrain_start.sh /app/gbrain_start.sh
+COPY gbrain_minions.sh /app/gbrain_minions.sh
 COPY gbrain_mcp.sh /app/gbrain_mcp.sh
+COPY healthcheck.sh /app/healthcheck.sh
 COPY hermes_setup/ /app/hermes_setup/
 COPY hermes_cron/ /app/hermes_cron/
 
 # Create the supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_mcp.sh /app/hermes_setup/*
+RUN chmod +x /app/hermes_start.sh /app/syncthing_config.sh /app/gbrain_start.sh /app/gbrain_minions.sh /app/gbrain_mcp.sh /app/healthcheck.sh /app/hermes_setup/*
 
 ENV HOME=/data
 ENV PATH="/root/.bun/bin:$PATH"

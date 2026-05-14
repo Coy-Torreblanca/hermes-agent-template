@@ -51,3 +51,13 @@ jobs:
   enabled_toolsets:
   - terminal
   - file
+
+- name: personalai-healthcheck
+  schedule: 0 6 * * *
+  prompt: "Run the Personal AI health check and report the results.\n\n1. Run /app/healthcheck.sh\n2. Report a concise summary:\n   - Overall status (PASS/WARN/FAIL)\n   - Any warnings and failures\n   - Key numbers: gbrain brain score, embed coverage, orphans, stale pages\n   - Supervisor program statuses\n3. If any failures are found, flag them for attention.\n4. If the health check shows degradation, recommend next steps.\n\nKeep it brief.\n"
+  skills:
+  - second-brain
+  deliver: discord
+  enabled_toolsets:
+  - terminal
+  - file

@@ -619,7 +619,81 @@ async def page_index(request: Request):
 
 
 async def route_health(request: Request):
-    return JSONResponse({"status": "ok", "gateway": gw.state})
+    """Personal AI comprehensive health check.
+    
+    Runs healthcheck.sh and returns structured JSON with component status.
+    Used by Railway deploy healthcheck AND exposed for external monitoring.
+    """
+    import subprocess as sp
+    import shlex
+    
+    script = "/app/healthcheck.sh"
+    if not os.path.exists(script):
+        return JSONResponse({
+            "status": "error",
+            "error": "healthcheck.sh not found",
+            "gateway": gw.state,
+        }, status_code=503)
+    
+    try:
+        result = sp.run(
+            ["/bin/bash", script],
+            capture_output=True, text=True, timeout=60,
+            env={**os.environ, "HEALTHCHECK_JSON": "1"}
+        )
+        lines = result.stdout.split("\n")
+        
+        # Parse structured summary from output
+        passed = sum(1 for l in lines if "[PASS]" in l)
+        warned = sum(1 for l in lines if "[WARN]" in l)
+        failed = sum(1 for l in lines if "[FAIL]" in l)
+        
+        # Extract category headers
+        categories = []
+        for l in lines:
+            l = l.strip()
+            if l.startswith("──") and "──" in l[2:]:
+                cat = l.strip("─ ").strip()
+                if cat:
+                    categories.append(cat)
+        
+        # Determine overall status
+        if failed > 0:
+            status = "degraded"
+            http_status = 200  # Don't fail Railway deploy for non-critical
+        elif warned > 0:
+            status = "warn"
+            http_status = 200
+        else:
+            status = "ok"
+            http_status = 200
+        
+        return JSONResponse({
+            "status": status,
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "checks": {
+                "passed": passed,
+                "warned": warned,
+                "failed": failed,
+                "categories": categories,
+            },
+            "exit_code": result.returncode,
+            "gateway": gw.state,
+            "output": result.stdout[-2000:] if len(result.stdout) > 2000 else result.stdout,
+        }, status_code=http_status)
+        
+    except sp.TimeoutExpired:
+        return JSONResponse({
+            "status": "timeout",
+            "error": "health check timed out after 60s",
+            "gateway": gw.state,
+        }, status_code=200)
+    except Exception as e:
+        return JSONResponse({
+            "status": "error",
+            "error": str(e),
+            "gateway": gw.state,
+        }, status_code=200)
 
 
 async def api_config_get(request: Request):
