@@ -1,26 +1,21 @@
 jobs:
 - name: gbrain-contradictions
   schedule: 0 9 * * *
-  prompt: "Run gbrain eval suspected-contradictions. If any high-severity contradictions\
-    \ are found, list them with a brief summary. Medium-severity: mention count only.\
-    \ If clean, respond with \"\U0001F9E0 Brain is consistent \u2014 no contradictions\
-    \ found.\"\n"
+  prompt: 'Run gbrain eval suspected-contradictions. If any high-severity contradictions
+    are found, list them with a brief summary. Medium-severity: mention count only.
+    If clean, respond with "🧠 Brain is consistent — no contradictions found."
+
+    '
   skills:
   - second-brain
-  deliver: discord
-  enabled_toolsets:
-  - terminal
-  - file
+  deliver: discord:#secondbrain
 - name: gbrain-doctor
   schedule: 0 9 * * 1
   prompt: 'Run gbrain doctor and report the health dashboard summary. Include: page
     count, embed coverage, stale pages, orphan count, and health score.'
   skills:
   - second-brain
-  deliver: discord
-  enabled_toolsets:
-  - terminal
-  - file
+  deliver: discord:#secondbrain
 - name: gbrain-dream
   schedule: 0 2 * * *
   prompt: "Run the gbrain dream cycle (autopilot maintenance).\n\n1. Submit autopilot-cycle\
@@ -32,32 +27,63 @@ jobs:
     \ cycle couldn't run and ask to start the worker.\n"
   skills:
   - second-brain
-  deliver: discord
-  enabled_toolsets:
-  - terminal
-  - file
+  deliver: discord:#secondbrain
 - name: gbrain-orphans
   schedule: 0 9 * * 6
-  prompt: "Surface orphan pages from gbrain for enrichment.\n\n1. Run gbrain find-orphans\
-    \ to list pages with no inbound links.\n2. If orphans > 50: report count + top\
-    \ 10 (sorted by most recent).\n3. If orphans \u2264 50: list all orphans with\
-    \ their type and last-updated date.\n4. If 0 orphans: respond with \"\U0001F3AE\
-    \ Zero orphan pages \u2014 brain graph is fully connected.\"\n\nKeep it brief.\
-    \ This is a cue for Coy to decide which orphans to enrich, not an automated enrichment\
-    \ job.\n"
+  prompt: 'Surface orphan pages from gbrain for enrichment.
+
+
+    1. Run gbrain find-orphans to list pages with no inbound links.
+
+    2. If orphans > 50: report count + top 10 (sorted by most recent).
+
+    3. If orphans ≤ 50: list all orphans with their type and last-updated date.
+
+    4. If 0 orphans: respond with "🎮 Zero orphan pages — brain graph is fully connected."
+
+
+    Keep it brief. This is a cue for Coy to decide which orphans to enrich, not an
+    automated enrichment job.
+
+    '
   skills:
   - second-brain
-  deliver: discord
-  enabled_toolsets:
-  - terminal
-  - file
+  deliver: discord:#secondbrain
+- name: gbrain-article-enrichment
+  schedule: 0 9 * * 0
+  prompt: 'Auto-enrich orphan articles by linking entities.
 
+
+    1. Run gbrain find-orphans to list pages with no inbound links, filtered to article/research
+    types.
+
+    2. For each orphan article, run gbrain extract to find entity mentions (people,
+    companies, projects, concepts).
+
+    3. For each entity found, check if a gbrain page exists (using gbrain search or
+    resolve_slugs).
+
+    4. If the entity page exists, create a back-link: gbrain add-link from=<article>
+    to=<entity> link_type=references.
+
+    5. Report a summary: how many articles processed, how many links created.
+
+
+    Keep it brief. This runs weekly to maintain graph connectivity.
+
+    '
+  skills:
+  - second-brain
+  deliver: discord:#secondbrain
 - name: personalai-healthcheck
   schedule: 0 6 * * *
-  prompt: "Run the Personal AI health check and report the results.\n\n1. Run /app/healthcheck.sh\n2. Report a concise summary:\n   - Overall status (PASS/WARN/FAIL)\n   - Any warnings and failures\n   - Key numbers: gbrain brain score, embed coverage, orphans, stale pages\n   - Supervisor program statuses\n3. If any failures are found, flag them for attention.\n4. If the health check shows degradation, recommend next steps.\n\nKeep it brief.\n"
+  prompt: "Run the Personal AI health check and report the results.\n\n1. Run /app/healthcheck.sh\n\
+    2. Report a concise summary:\n   - Overall status (PASS/WARN/FAIL)\n   - Any warnings\
+    \ and failures\n   - Key numbers: gbrain brain score, embed coverage, orphans,\
+    \ stale pages\n   - Supervisor program statuses\n3. If any failures are found,\
+    \ flag them for attention.\n4. If the health check shows degradation, recommend\
+    \ next steps.\n\nKeep it brief.\n"
   skills:
   - second-brain
-  deliver: discord
-  enabled_toolsets:
-  - terminal
-  - file
+  deliver: discord:#secondbrain
+
